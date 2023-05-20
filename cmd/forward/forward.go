@@ -81,6 +81,12 @@ func forward(c *gin.Context, app *application) {
 		return
 	}
 
+	for k, v := range resp.Header {
+		for _, vv := range v {
+			c.Writer.Header().Add(k, vv)
+		}
+	}
+
 	contentType := resp.Header.Get("content-type")
 
 	c.Data(resp.StatusCode, contentType, full)

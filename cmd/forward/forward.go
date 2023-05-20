@@ -77,7 +77,7 @@ func forward(c *gin.Context, app *application) {
 	full, errBody := io.ReadAll(resp.Body)
 	if errBody != nil {
 		log.Printf("%s: %v", me, errBody)
-		c.JSON(http.StatusBadRequest, errorResponse{Error: errBody.Error()})
+		c.JSON(http.StatusBadGateway, errorResponse{Error: errBody.Error()})
 		return
 	}
 

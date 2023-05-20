@@ -27,7 +27,7 @@ func forward(c *gin.Context, app *application) {
 	//
 
 	type errorResponse struct {
-		Error string
+		Error string `json:"error"`
 	}
 
 	type requestBody struct {

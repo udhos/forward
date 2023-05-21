@@ -25,6 +25,39 @@ cd forward
 
 ## Usage
 
+Send this request body to `forward`.
+
+```
+body: put-actual-body-to-forward-here
+method: GET
+set_headers:
+  key1: value1
+  key2: value2
+url: http://localhost:2000/v1/hello # put full request URL here
+```
+
+### Example for Google
+
+```
+# start forward
+forward
+```
+
+```
+# call forward
+
+$ more sample/google.yaml
+url: https://www.google.com/search?q=golang
+method: GET
+
+$ curl --data-binary @sample/google.yaml localhost:8080/forward
+<output omitted>
+```
+
+### Example for miniapi
+
+Forward to [miniapi](https://github.com/udhos/miniapi).
+
 ```
 # start miniapi on port 2000
 export ADDR=:2000
@@ -39,14 +72,14 @@ forward
 ```
 # call forward
 
-$ more sample/request.yaml
+$ more sample/miniapi.yaml
 body: aaaaa
 method: PUT
 set_headers:
   a: b
 url: http://localhost:2000/v1/hello
 
-$ curl --data-binary @sample/request.yaml localhost:8080/forward
+$ curl --data-binary @sample/miniapi.yaml localhost:8080/forward
 
 {"request":{"headers":{"A":["b"],"Accept-Encoding":["gzip"],"Content-Length":["5"],"User-Agent":["Go-http-client/1.1"],"X-B3-Sampled":["1"],"X-B3-Spanid":["23e1685fce0c9374"],"X-B3-Traceid":["1c8318e574e71c17b61eec3814ede924"]},"method":"PUT","uri":"/v1/hello","host":"localhost:2000","body":"aaaaa","form_query":{},"form_post":{},"parameters":{"param1":"","param2":""}},"message":"ok","status":200,"server_hostname":"ubuntu","server_version":"1.0.5"}
 ```

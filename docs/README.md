@@ -14,8 +14,8 @@ Update files from repo:
 Search forward:
 
     helm search repo forward -l --version ">=0.0.0"
-    NAME                        CHART VERSION	APP VERSION	DESCRIPTION
-    forward/forward          	0.1.0        	0.0.0     	A Helm chart for installing Forward into Kubernetes
+    NAME           	CHART VERSION	APP VERSION	DESCRIPTION
+    forward/forward	0.1.0        	0.0.0      	A Helm chart for installing Forward into Kubernetes
 
 To install the charts:
 

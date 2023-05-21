@@ -52,6 +52,10 @@ func forward(c *gin.Context, app *application) {
 		method = in.Method
 	}
 
+	//
+	// send request
+	//
+
 	req, errReq := http.NewRequestWithContext(ctxNew, method, in.URL, bytes.NewBufferString(in.Body))
 	if errReq != nil {
 		log.Printf("%s: %v", me, errReq)
@@ -59,6 +63,7 @@ func forward(c *gin.Context, app *application) {
 		return
 	}
 
+	// set request headers
 	for k, v := range in.SetHeaders {
 		req.Header.Set(k, v)
 	}
@@ -74,6 +79,10 @@ func forward(c *gin.Context, app *application) {
 
 	defer resp.Body.Close()
 
+	//
+	// read response body
+	//
+
 	full, errBody := io.ReadAll(resp.Body)
 	if errBody != nil {
 		log.Printf("%s: %v", me, errBody)
@@ -81,11 +90,19 @@ func forward(c *gin.Context, app *application) {
 		return
 	}
 
+	//
+	// copy response headers
+	//
+
 	for k, v := range resp.Header {
 		for _, vv := range v {
 			c.Writer.Header().Add(k, vv)
 		}
 	}
+
+	//
+	// send response
+	//
 
 	contentType := resp.Header.Get("content-type")
 

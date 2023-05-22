@@ -52,6 +52,13 @@ podHealthCheck:
 configMapProperties:
   #GIN_MODE: release
   #JAEGER_URL: http://jaeger-collector:14268/api/traces
+  #LISTEN_ADDR: ":8080"
+  #HEALTH_ADDR": ":8888"
+  #HEALTH_PATH": /health
+  #METRICS_ADDR: ":3000"
+  #METRICS_PATH": /metrics
+  #METRICS_MASK_PATH: "true"
+  #METRICS_NAMESPACE: ""
   OTEL_TRACES_SAMPLER: parentbased_traceidratio
   OTEL_TRACES_SAMPLER_ARG: "0.01"
   # pick one of OTEL_SERVICE_NAME or OTEL_RESOURCE_ATTRIBUTES

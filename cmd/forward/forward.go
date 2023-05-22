@@ -7,6 +7,7 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"github.com/udhos/forward/cmd/forward/zlog"
 	"go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp"
 	"gopkg.in/yaml.v3"
 )
@@ -41,7 +42,8 @@ func forward(c *gin.Context, app *application) {
 	var in requestBody
 	errYaml := dec.Decode(&in)
 	if errYaml != nil {
-		log.Printf("%s: %v", me, errYaml)
+		zlog.CtxErrorf(ctxNew, "%s: %v", me, errYaml)
+		traceError(span, errYaml.Error())
 		c.JSON(http.StatusBadRequest, errorResponse{Error: errYaml.Error()})
 		return
 	}
@@ -58,7 +60,8 @@ func forward(c *gin.Context, app *application) {
 
 	req, errReq := http.NewRequestWithContext(ctxNew, method, in.URL, bytes.NewBufferString(in.Body))
 	if errReq != nil {
-		log.Printf("%s: %v", me, errReq)
+		zlog.CtxErrorf(ctxNew, "%s: %v", me, errReq)
+		traceError(span, errReq.Error())
 		c.JSON(http.StatusBadRequest, errorResponse{Error: errReq.Error()})
 		return
 	}
@@ -72,7 +75,8 @@ func forward(c *gin.Context, app *application) {
 
 	resp, errDo := client.Do(req)
 	if errDo != nil {
-		log.Printf("%s: %v", me, errDo)
+		zlog.CtxErrorf(ctxNew, "%s: %v", me, errDo)
+		traceError(span, errDo.Error())
 		c.JSON(http.StatusBadRequest, errorResponse{Error: errDo.Error()})
 		return
 	}
@@ -85,7 +89,8 @@ func forward(c *gin.Context, app *application) {
 
 	full, errBody := io.ReadAll(resp.Body)
 	if errBody != nil {
-		log.Printf("%s: %v", me, errBody)
+		zlog.CtxErrorf(ctxNew, "%s: %v", me, errBody)
+		traceError(span, errBody.Error())
 		c.JSON(http.StatusBadGateway, errorResponse{Error: errBody.Error()})
 		return
 	}

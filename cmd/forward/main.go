@@ -13,13 +13,15 @@ import (
 	"syscall"
 	"time"
 
+	ginzap "github.com/gin-contrib/zap"
 	"github.com/gin-gonic/gin"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"github.com/udhos/boilerplate/boilerplate"
-	"github.com/udhos/gateboard/tracing"
+	"github.com/udhos/forward/cmd/forward/zlog"
 	"go.opentelemetry.io/contrib/instrumentation/github.com/gin-gonic/gin/otelgin"
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/trace"
+	"go.uber.org/zap"
 )
 
 const version = "0.1.0"
@@ -56,12 +58,16 @@ func main() {
 		config: newConfig(me),
 	}
 
+	if app.config.debug {
+		zlog.LoggerConfig.Level.SetLevel(zap.DebugLevel)
+	}
+
 	//
 	// initialize tracing
 	//
 
 	{
-		tp, errTracer := tracing.TracerProvider(app.me, app.config.jaegerURL)
+		tp, errTracer := tracerProvider(app.me, app.config.jaegerURL)
 		if errTracer != nil {
 			log.Fatalf("tracer provider: %v", errTracer)
 		}
@@ -83,7 +89,7 @@ func main() {
 			}
 		}(ctx)
 
-		tracing.TracePropagation()
+		tracePropagation()
 
 		app.tracer = tp.Tracer(fmt.Sprintf("%s-main", me))
 	}
@@ -151,7 +157,17 @@ func initApplication(app *application, addr string) {
 	app.serverMain = newServerGin(addr)
 	app.serverMain.router.Use(middlewareMetrics(app.config.metricsMaskPath))
 	app.serverMain.router.Use(otelgin.Middleware(app.me))
-	app.serverMain.router.Use(gin.Logger())
+
+	// anything other than "zap" enables gin default logger
+	if app.config.logDriver == "zap" {
+		app.serverMain.router.Use(ginzap.GinzapWithConfig(zlog.Logger, &ginzap.Config{
+			UTC:        true,
+			TimeFormat: time.RFC3339,
+			Context:    zlog.GinzapFields,
+		}))
+	} else {
+		app.serverMain.router.Use(gin.Logger())
+	}
 
 	//
 	// register application routes

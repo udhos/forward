@@ -51,6 +51,8 @@ podHealthCheck:
 #
 configMapProperties:
   #GIN_MODE: release
+  #DEBUG: true
+  LOG_DRIVER: zap # anything other than "zap" enables gin default logger
   #JAEGER_URL: http://jaeger-collector:14268/api/traces
   #LISTEN_ADDR: ":8080"
   #HEALTH_ADDR": ":8888"

@@ -3,6 +3,8 @@ package main
 import "github.com/udhos/boilerplate/envconfig"
 
 type appConfig struct {
+	debug            bool
+	logDriver        string // anything other than "zap" enables gin default logger
 	jaegerURL        string
 	applicationAddr  string
 	healthAddr       string
@@ -18,6 +20,8 @@ func newConfig(roleSessionName string) appConfig {
 	env := envconfig.NewSimple(roleSessionName)
 
 	return appConfig{
+		debug:            env.Bool("DEBUG", true),
+		logDriver:        env.String("LOG_DRIVER", ""), // anything other than "zap" enables gin default logger
 		jaegerURL:        env.String("JAEGER_URL", "http://jaeger-collector:14268/api/traces"),
 		applicationAddr:  env.String("LISTEN_ADDR", ":8080"),
 		healthAddr:       env.String("HEALTH_ADDR", ":8888"),

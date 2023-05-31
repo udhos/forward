@@ -18,21 +18,21 @@ var (
 	metric           *metrics
 )
 
-func initMetrics(namespace string) {
+func initMetrics(namespace string, latencyBuckets []float64) {
 	if metric != nil {
 		return
 	}
-	metric = newMetrics(namespace)
+	metric = newMetrics(namespace, latencyBuckets)
 }
 
-func newMetrics(namespace string) *metrics {
+func newMetrics(namespace string, latencyBuckets []float64) *metrics {
 	return &metrics{
 		latencySpring: promauto.NewHistogramVec(
 			prometheus.HistogramOpts{
 				Namespace: namespace,
 				Name:      "http_server_requests_seconds",
 				Help:      "Spring-like server request duration in seconds.",
-				Buckets:   []float64{0.001, 0.0025, 0.005, 0.01, 0.025, 0.05, 0.1, 0.25, 0.5, 1.0, 2.5, 5, 10},
+				Buckets:   latencyBuckets,
 			},
 			dimensionsSpring,
 		),

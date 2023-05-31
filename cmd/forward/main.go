@@ -24,7 +24,7 @@ import (
 	"go.uber.org/zap"
 )
 
-const version = "1.0.0"
+const version = "1.1.0"
 
 type application struct {
 	me            string
@@ -152,7 +152,7 @@ func main() {
 
 func initApplication(app *application, addr string) {
 
-	initMetrics(app.config.metricsNamespace)
+	initMetrics(app.config.metricsNamespace, app.config.metricsBucketsLatency)
 
 	app.serverMain = newServerGin(addr)
 	app.serverMain.router.Use(middlewareMetrics(app.config.metricsMaskPath))

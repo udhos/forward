@@ -6,7 +6,7 @@ require (
 	github.com/gin-contrib/zap v0.1.0
 	github.com/gin-gonic/gin v1.9.0
 	github.com/prometheus/client_golang v1.15.1
-	github.com/udhos/boilerplate v1.0.1
+	github.com/udhos/boilerplate v1.1.0
 	go.opentelemetry.io/contrib/instrumentation/github.com/gin-gonic/gin/otelgin v0.41.1
 	go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp v0.40.0
 	go.opentelemetry.io/contrib/propagators/b3 v1.16.1

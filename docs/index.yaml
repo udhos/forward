@@ -2,6 +2,18 @@ apiVersion: v1
 entries:
   forward:
   - apiVersion: v2
+    appVersion: 1.1.1
+    created: "2023-06-04T00:05:19.263162142-03:00"
+    description: A Helm chart for installing Forward into Kubernetes
+    digest: d40f26e88e134b6a1ca1d6667390bde952d0115d1f214cc3562cd5bf12f85aef
+    name: forward
+    sources:
+    - https://github.com/udhos/forward
+    type: application
+    urls:
+    - https://udhos.github.io/forward/forward-1.2.0.tgz
+    version: 1.2.0
+  - apiVersion: v2
     appVersion: 1.1.0
     created: "2023-05-31T15:23:45.513280407-03:00"
     description: A Helm chart for installing Forward into Kubernetes
@@ -49,4 +61,4 @@ entries:
     urls:
     - https://udhos.github.io/forward/forward-0.1.0.tgz
     version: 0.1.0
-generated: "2023-05-31T15:23:45.511591091-03:00"
+generated: "2023-06-04T00:05:18.863595714-03:00"

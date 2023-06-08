@@ -23,7 +23,10 @@ RUN go build -o /tmp/forward github.com/udhos/forward/cmd/forward
 #
 FROM alpine:3.18.0
 COPY --from=builder /tmp/forward /bin/forward
-RUN apk add curl=8.1.2-r0 libcrypto3=3.1.0-r4 libssl3=3.1.0-r4
+#RUN apk add curl=8.1.2-r0 libcrypto3=3.1.0-r4 libssl3=3.1.0-r4
+RUN apk update
+RUN apk add curl
+RUN apk upgrade libssl3 libcrypto3
 RUN adduser -D -g '' user
 USER user
 ENTRYPOINT ["/bin/forward"]
